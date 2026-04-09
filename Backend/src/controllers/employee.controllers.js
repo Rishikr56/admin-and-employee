@@ -6,37 +6,35 @@ async function employeeLogin(req, res) {
 
     if (!email || !password) {
       return res.status(400).json({
-        message: "All fields are required",
+        message: "All fileds are required",
       });
     }
 
     const isEmployeeExist = await employeedetailsModels.findOne({ email });
+
     if (!isEmployeeExist) {
       return res.status(401).json({
         message: "Unauthorized Access",
       });
     }
 
-    console.log("db pass", isEmployeeExist.password);
-    console.log("user pass", password);
-    console.log("Employee details", isEmployeeExist);
+    if (!isEmployeeExist.isActive) {
+      return res.status(401).json({
+        message: "your account is disabled",
+      });
+    }
+
     if (isEmployeeExist.password !== password) {
       return res.status(401).json({
         message: "Password is wrong",
-        password: isEmployeeExist.password,
       });
     }
-    console.log("isEMplo ohdfiu", isEmployeeExist.password);
-    console.log(password);
-
     return res.status(200).json({
-      message: "Successfully logged in",
+      message: "user logged in successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
-      message: "Login Error",
-      error: error.message,
+      message: "Internal server error",
     });
   }
 }

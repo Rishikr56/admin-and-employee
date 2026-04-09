@@ -1,63 +1,72 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import PassContext, { PassProvider } from "../context/PassContext";
 
-const Random = () => {
-  const [pass,setPass] = useState("");
-  let randomCode = "";
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const number = "1234567890";
-  const chooseAlpha = Math.floor(Math.random() * 26);
-  randomCode += String(alphabet[chooseAlpha]);
-  for (let i = 0; i < 9; i++) {
-    const temp = Math.floor(Math.random() * 10);
-    randomCode += number[temp];
-  }
-  console.log(randomCode);
+const Random = ({ genearteRandomPass }) => {
+  const { pass, setPass, code, setCode } = useContext(PassProvider);
 
-  async function genearteRandomPass() {
-    let password  = "";
-
-    for (let i = 0; i < 3; i++) {
-      let res = await fetch("https://random-word-api.herokuapp.com/word");
-      const word = await res.json();
-      password += word;
+  function generateDealerCode() {
+    let randomCode = "";
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const number = "1234567890";
+    const chooseAlpha = Math.floor(Math.random() * 26);
+    randomCode += String(alphabet[chooseAlpha]);
+    for (let i = 0; i < 9; i++) {
+      const temp = Math.floor(Math.random() * 10);
+      randomCode += number[temp];
     }
-
-    if (password.length > 10) {
-      password = password.slice(0, 10);
-    }
-    password = password.charAt(0).toUpperCase() + password.slice(1);
-
-    const randomnumer = Math.floor(Math.random() * 1000);
-    password += randomnumer;
-
-    setPass(password);
+    setCode(randomCode);
   }
 
   return (
-    <div>
-      <div className="h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-gray-800 p-6 rounded-2xl shadow-lg w-[320px] text-center">
-        <h2 className="text-white text-xl font-semibold mb-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="bg-white border border-blue-100 p-6 rounded-2xl shadow-lg text-center">
+        <h2 className="text-blue-800 text-xl font-semibold mb-1">
           Password Generator
         </h2>
+        <p className="text-blue-400 text-xs mb-4">
+          Generate a secure random password
+        </p>
 
         <input
           type="text"
           value={pass}
           readOnly
           placeholder="Your password..."
-          className="w-full p-2 mb-4 rounded-lg bg-gray-700 text-white text-center outline-none"
+          className="w-full p-2 mb-4 rounded-lg bg-blue-50 text-blue-800 text-center outline-none border border-blue-200 placeholder:text-blue-300 font-mono tracking-widest"
         />
 
         <button
           onClick={genearteRandomPass}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
+          className="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white py-2 rounded-lg transition-all duration-150 font-medium text-sm"
         >
           Generate Password
         </button>
       </div>
-    </div>
-    
+
+      {/* Dealer Code Card */}
+      <div className="bg-white border border-blue-100 p-6 rounded-2xl shadow-lg text-center">
+        <h2 className="text-blue-800 text-xl font-semibold mb-1">
+          Dealer Code
+        </h2>
+        <p className="text-blue-400 text-xs mb-4">
+          Generate a unique dealer code
+        </p>
+
+        <input
+          type="text"
+          value={code}
+          readOnly
+          placeholder="Your dealer code..."
+          className="w-full p-2 mb-4 rounded-lg bg-blue-50 text-blue-800 text-center outline-none border border-blue-200 placeholder:text-blue-300 font-mono tracking-widest"
+        />
+
+        <button
+          onClick={generateDealerCode}
+          className="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white py-2 rounded-lg transition-all duration-150 font-medium text-sm"
+        >
+          Generate Dealer Code
+        </button>
+      </div>
     </div>
   );
 };

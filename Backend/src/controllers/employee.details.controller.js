@@ -46,4 +46,35 @@ async function updateStatus(req, res) {
   }
 }
 
-module.exports = { updateStatus, getEmployeeDetails };
+async function addEmployee(req, res) {
+  try {
+    const { email, password, isActive, fullName } = req.body;
+
+    if (!email || !password || !isActive || !fullName) {
+      return res.status(400).json({
+        message: "All fileds are required",
+      });
+    }
+
+    const isEmployeeExist = await employeedetailsModels.findOne({ email });
+
+    if (isEmployeeExist) {
+      return res.status(409).json({
+        message: "Employee with this email already exist",
+      });
+    }
+
+    const newEmployee = await employeedetailsModels.create({
+      email,
+      password,
+      isActive,
+      fullName,
+    });
+    return res.status(201).json({
+      message: "Employee created successfully",
+      newEmployee,
+    });
+  } catch (error) {}
+}
+
+module.exports = { updateStatus, getEmployeeDetails ,addEmployee };

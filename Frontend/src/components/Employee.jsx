@@ -5,9 +5,12 @@ import axiosInstance from "../Api/AxiosInstance";
 const Employee = () => {
   const { register, handleSubmit, reset } = useForm();
   async function handleEmployeeLogin(data) {
-    console.log(data);
-    const res = await axiosInstance.post("/login/employee", data);
-    console.log(res);
+    try {
+      const res = await axiosInstance.post("/login/employee", data);
+      console.log(res);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">

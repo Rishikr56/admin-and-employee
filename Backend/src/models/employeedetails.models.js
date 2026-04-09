@@ -15,8 +15,12 @@ const employeeDetailsSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    password: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true },
 );
-
+  
 module.exports = mongoose.model("EmployeeDetails", employeeDetailsSchema);
